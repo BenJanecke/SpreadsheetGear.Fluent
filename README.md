@@ -3,14 +3,14 @@ SpreadsheetGear.Fluent
 
 SpreadsheetGear.Fluent a fluent implementation of the IRange interface. 
 
-This Goal of this project is to allow developers to do something like the following when generating a spreadsheet with 
+This Goal of this project is to allow developers to use a terse easy to understand Api when generating a spreadsheet with 
 SpreadsheetGear or anything that implements IRange as defined by SpreadsheetGear.
 
 Why?
 
 Because I want developers to be able to do the following
 
-  var ws = Factory.GetWorksheet();
+  	var ws = Factory.GetWorksheet();
 	int rowStart = 1;
 	int colStart = 1;
 	int rowEnd = 2;
@@ -83,4 +83,24 @@ Instead Of
 		 SetValueFormat("{0} Days Of Summer", 500).
 		 SetStyle(style  => style.Font.Bold = True).
 		 ToggleMerge();
+
+Disclaimer 
+
+I dont work for or with SpreadhseetGear and I have not worked with them in the past.
+This Api merely exists To Simplify my life and the lives of my developers.
+
+Caveat 
+
+SpreadsheetGear Is not free you have to buy it wich means I cannot upload or Refrence the SpreadsheetGear 
+assemblies directly from within this project therefore whis Project stricly only communicates with the SpreadsheetGear 
+Interfaces.
+
+Imaginaaation 
+
+Like I mentioned above a few times This Api Leverages The IRange interface not SpreadhseetGear directly. 
+
+So How does that help you?
+
+If SpreadsheetGear Is not your Component of choice simply write an adapter for your compnent to the IRange interface
+And tada! you get to make use of this slick and sexy api.
 
