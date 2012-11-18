@@ -10,45 +10,6 @@ Why?
 
 Because I want developers to be able to do the following
 
-  	var ws = Factory.GetWorksheet();
-	int rowStart = 1;
-	int colStart = 1;
-	int rowEnd = 2;
-	int colEnd = 2;
-	double? currency = 22;
-	DateTime? Date = new DateTime(1,1,1);
-	
-
-	//Write A Currency
-	ws.Cells[rowStart, colStart, rowEnd, colEnd].Formula = currency;
-	ws.Cells[rowStart, colStart, rowEnd, colEnd].NumberFormat = NumberFormat.Currency;
-	ws.Cells[rowStart, colStart, rowEnd, colEnd].Style.Font.Bold = True;
-	ws.Cells[rowStart, colStart, rowEnd, colEnd].Merge();	 
-			
-	rowStart++;
-	colStart++;
-	rowEnd++;
-	colEnd++;
-	
-	//Write A Date 
-	ws.Cells[rowStart, colStart, rowEnd, colEnd].Formula = date;
-	ws.Cells[rowStart, colStart, rowEnd, colEnd].NumberFormat = NumberFormat.ShortDate;
-	ws.Cells[rowStart, colStart, rowEnd, colEnd].Style.Font.Bold = True;
-	ws.Cells[rowStart, colStart, rowEnd, colEnd].Merge();	
-	
-	rowStart++;
-	colStart++;
-	rowEnd++;
-	colEnd++;
-	
-	//Write with format 
-	ws.Cells[rowStart, colStart, rowEnd, colEnd].Formula = String.Format("{0} Days Of Summer", 500);
-	ws.Cells[rowStart, colStart, rowEnd, colEnd].Style.Font.Bold = True;
-	ws.Cells[rowStart, colStart, rowEnd, colEnd].Merge();	
-	
-	
-Instead Of
-
 	var ws = Factory.GetWorksheet();
 	int rowStart = 1;
 	int colStart = 1;
@@ -84,11 +45,54 @@ Instead Of
 		 SetValueFormat("{0} Days Of Summer", 500).
 		 SetStyle(style  => style.Font.Bold = True).
 		 ToggleMerge();
+  
+	
+	
+Instead Of
+
+	
+	var ws = Factory.GetWorksheet();
+	int rowStart = 1;
+	int colStart = 1;
+	int rowEnd = 2;
+	int colEnd = 2;
+	double? currency = 22;
+	DateTime? Date = new DateTime(1,1,1);
+	
+
+	//Write A Currency
+	ws.Cells[rowStart, colStart, rowEnd, colEnd].Formula = currency;
+	ws.Cells[rowStart, colStart, rowEnd, colEnd].NumberFormat = NumberFormat.Currency;
+	ws.Cells[rowStart, colStart, rowEnd, colEnd].Style.Font.Bold = True;
+	ws.Cells[rowStart, colStart, rowEnd, colEnd].Merge();	 
+			
+	rowStart++;
+	colStart++;
+	rowEnd++;
+	colEnd++;
+	
+	//Write A Date 
+	ws.Cells[rowStart, colStart, rowEnd, colEnd].Formula = date;
+	ws.Cells[rowStart, colStart, rowEnd, colEnd].NumberFormat = NumberFormat.ShortDate;
+	ws.Cells[rowStart, colStart, rowEnd, colEnd].Style.Font.Bold = True;
+	ws.Cells[rowStart, colStart, rowEnd, colEnd].Merge();	
+	
+	rowStart++;
+	colStart++;
+	rowEnd++;
+	colEnd++;
+	
+	//Write with format 
+	ws.Cells[rowStart, colStart, rowEnd, colEnd].Formula = String.Format("{0} Days Of Summer", 500);
+	ws.Cells[rowStart, colStart, rowEnd, colEnd].Style.Font.Bold = True;
+	ws.Cells[rowStart, colStart, rowEnd, colEnd].Merge();	
 
 Disclaimer 
 
 I dont work for or with SpreadhseetGear and I have not worked with them in the past.
+Wich is to say I am in no way Affiliated with SpreadhseetGear LLC I just happen to really like their product.
 This Api merely exists To Simplify my life and the lives of my developers.
+
 
 Caveat 
 
