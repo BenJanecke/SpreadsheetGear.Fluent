@@ -1,7 +1,7 @@
 SpreadsheetGear.Fluent
 ======================
 
-SpreadsheetGear.Fluent a fluent implementation of the IRange interface. 
+SpreadsheetGear.Fluent a fluent Api for the IRange interface. 
 
 This Goal of this project is to allow developers to use a terse easy to understand Api when generating a spreadsheet with 
 SpreadsheetGear or anything that implements IRange as defined by SpreadsheetGear.
