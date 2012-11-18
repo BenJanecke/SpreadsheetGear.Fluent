@@ -97,7 +97,7 @@ This Api merely exists To Simplify my life and the lives of my developers.
 Caveat 
 
 SpreadsheetGear Is not free you have to buy it wich means I cannot upload or Refrence the SpreadsheetGear 
-assemblies directly from within this project therefore whis Project stricly only communicates with the SpreadsheetGear 
+assemblies directly from within this project therefore this Project stricly only communicates with the SpreadsheetGear 
 Interfaces.
 
 Imaginaaation 
