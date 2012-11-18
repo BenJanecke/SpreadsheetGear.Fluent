@@ -6,7 +6,7 @@ SpreadsheetGear.Fluent a fluent Api for the IRange interface.
 This Goal of this project is to allow developers to use a terse easy to understand Api when generating a spreadsheet with 
 SpreadsheetGear or anything that implements IRange as defined by SpreadsheetGear.
 
-Why?
+### Why?
 
 Because I want developers to be able to do the following
 
@@ -87,20 +87,20 @@ Instead Of
 	ws.Cells[rowStart, colStart, rowEnd, colEnd].Style.Font.Bold = True;
 	ws.Cells[rowStart, colStart, rowEnd, colEnd].Merge();	
 
-Disclaimer 
+### Disclaimer 
 
 I dont work for or with SpreadhseetGear and I have not worked with them in the past.
 Wich is to say I am in no way Affiliated with SpreadhseetGear LLC I just happen to really like their product.
 This Api merely exists To Simplify my life and the lives of my developers.
 
 
-Caveat 
+### Caveat 
 
 SpreadsheetGear Is not free you have to buy it wich means I cannot upload or Refrence the SpreadsheetGear 
 assemblies directly from within this project therefore this Project stricly only communicates with the SpreadsheetGear 
 Interfaces.
 
-Imaginaaation 
+### Imaginaaation 
 
 Like I mentioned above a few times This Api Leverages The IRange interface not SpreadhseetGear directly. 
 
