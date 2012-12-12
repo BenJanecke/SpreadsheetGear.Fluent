@@ -1,14 +1,23 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using SpreadsheetGear;
+using SpreadsheetGear.Charts;
 
 namespace SpreadsheetGear.Fluent
 {
     public static class Fluent
     {
+        #region Workbook
 
-        #region WorkSheets 
+        public static IWorksheet Worksheet(this IWorkbook ef, string sheet)
+        {
+            return ef.Worksheets[sheet];
+        }
+
+        #endregion Workbook
+
+        #region WorkSheets
 
         public static IWorksheet SetMarginToNarrow(this IWorksheet ws)
         {
@@ -67,6 +76,19 @@ namespace SpreadsheetGear.Fluent
             return worksheet.Cells[startingRow, startingCol, finalRow, finalCol];
         }
 
+
+        public static IRange SetValueF(this IRange range, string value, params object[] arguments)
+        {
+            range.NumberFormat = "@";
+            range.SetValue(String.Format(value, arguments));
+            return range;
+        }
+
+        public static IRange SetFormula(this IRange range, string value)
+        {
+            range.Formula = value;
+            return range;
+        }
         public static IRange SetValue(this IRange range, object value, bool autoNumberFormat = false)
         {
             if (value != null)
@@ -89,6 +111,13 @@ namespace SpreadsheetGear.Fluent
         {
             range.NumberFormat = numberFormat.GetNumberFormat();
          
+            return range;
+        }
+
+        public static IRange SetNumberFormat(this IRange range,string nf)
+        {
+            range.NumberFormat = nf;
+
             return range;
         }
 
@@ -156,6 +185,17 @@ namespace SpreadsheetGear.Fluent
             return range;
         }
 
+        public static IRange SetFillColor(this IRange range, System.Drawing.Color color)
+        {
+            range.Interior.Color = color.ToSpreadsheetGearColor();
+            return range;
+        }
+
+        public static IRange SetFillColor(this IRange range, Color color)
+        {
+            range.Interior.Color = color;
+            return range;
+        }
         public static IRange SetBorders(this IRange range, BordersIndex borders, LineStyle style, BorderWeight weight, Color color)
         {
             range.Borders[borders].LineStyle = style;
@@ -184,6 +224,97 @@ namespace SpreadsheetGear.Fluent
             return range;
         }
         #endregion Styles 
+
+        #region charts
+
+        public class ChartParams
+        {
+            public string ChartName { get; set; }
+            public string XTitle { get; set; }
+            public string YTitle { get; set; }
+            public double Top { get; set; }
+            public double Left { get; set; }
+            public double Bottom { get; set; }
+            public double Right { get; set; }
+        }
+        
+        
+        //Should rahter use ISeries
+        public class Series
+        {
+            public string SeriesName { get; set; }
+            public IRange XValues { get; set; }
+            public IRange Values { get; set; }
+            public ChartType SeriesType { get; set; }
+            public bool? ShowValues { get; set; }
+            public bool? ShowPercentage { get; set; }
+        }
+
+        public static IChart Chart(this IWorksheet ws, ChartParams chartDetails)
+        {
+            var chart =  ws.Shapes.AddChart(chartDetails.Left, chartDetails.Top, chartDetails.Right, chartDetails.Bottom).Chart;
+
+            chart.HasTitle = true;
+            chart.ChartTitle.Text = chartDetails.ChartName;
+
+            chart.Axes[AxisType.Category].HasTitle = true;
+            chart.Axes[AxisType.Category].AxisTitle.Text = chartDetails.YTitle;
+
+            chart.Axes[AxisType.Value].HasTitle = true;
+            chart.Axes[AxisType.Value].AxisTitle.Text = chartDetails.XTitle;
+
+            return chart;
+        }
+
+        public static IChart SourceData(this IChart chart, IRange range, RowCol cols, ChartType type)
+        {
+            chart.SetSourceData(range, cols);
+            chart.ChartType = type;
+            return chart;
+        }
+
+        public static IChart AddSeries(this IChart chart, Series series)
+        {
+            var currentSeries = chart.SeriesCollection.Add();
+
+            currentSeries.ChartType = series.SeriesType;
+
+            currentSeries.Name = series.SeriesName;
+
+            currentSeries.Values = series.Values;
+            
+            if (series.ShowValues != null)
+            {
+                currentSeries.DataLabels.ShowValue = series.ShowValues.Value;
+            }
+
+            if (series.ShowPercentage != null)
+            {
+                currentSeries.DataLabels.ShowPercentage = series.ShowPercentage.Value;
+            }
+
+            if (series.XValues != null)
+            {
+                currentSeries.XValues = series.XValues;
+            }
+
+            return chart;
+        }
+
+
+        public static IChart AddSeries(this IChart chart, IEnumerable<Series> series)
+        {
+            foreach (var seri in series)
+            {
+                chart.AddSeries(seri);
+            }
+
+            return chart;
+        }
+
+
+        
+        #endregion charts
 
         #region Types
 
@@ -223,7 +354,7 @@ namespace SpreadsheetGear.Fluent
                                                                                      {NumberFormat.ShortDate, "dd/mm/yyyy"},
                                                                                      {NumberFormat.ShortNumber, "# ##0;[Red]-# ##0"},
                                                                                      {NumberFormat.Text, "@"},
-                                                                                     {NumberFormat.Time, ""},
+                                                                                     {NumberFormat.Time, "*"},
                                                                                      {NumberFormat.Clean,"#"}
                                                                                  };
 
