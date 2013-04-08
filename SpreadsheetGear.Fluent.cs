@@ -31,6 +31,17 @@ namespace SpreadsheetGear.Fluent
             return ws;
         }
 
+        public static IWorksheet SetMarginToZero(this IWorksheet ws)
+        {
+            ws.PageSetup.TopMargin = 0;
+            ws.PageSetup.LeftMargin = 0;
+            ws.PageSetup.HeaderMargin = 0;
+            ws.PageSetup.FooterMargin = 0;
+            ws.PageSetup.RightMargin = 0;
+            ws.PageSetup.BottomMargin = 0;
+
+            return ws;
+        }
         public static IWorksheet SetLayout(this IWorksheet ws, bool landscape)
         {
            ws.PageSetup.Orientation = landscape ? PageOrientation.Landscape : PageOrientation.Portrait;
@@ -56,6 +67,12 @@ namespace SpreadsheetGear.Fluent
             return ws;
         }
 
+        public static IWorksheet FitToPage(this IWorksheet ws, bool pages)
+        {
+            ws.PageSetup.FitToPages = pages;
+
+            return ws;
+        }
         #endregion WorkSheets
 
         #region Cells
@@ -80,7 +97,7 @@ namespace SpreadsheetGear.Fluent
         public static IRange SetValueF(this IRange range, string value, params object[] arguments)
         {
             range.NumberFormat = "@";
-            range.SetValue(String.Format(value, arguments));
+            range.SetValue(String.Format(value ?? string.Empty, arguments));
             return range;
         }
 
@@ -89,6 +106,7 @@ namespace SpreadsheetGear.Fluent
             range.Formula = value;
             return range;
         }
+
         public static IRange SetValue(this IRange range, object value, bool autoNumberFormat = false)
         {
             if (value != null)
@@ -102,6 +120,42 @@ namespace SpreadsheetGear.Fluent
                 return range;
             }
                 range.Value = value.ToString();
+                range.NumberFormat = value.GetNumberFormat();
+            }
+            return range;
+        }
+
+        public static IRange SetValue(this IRange range, DateTime? value, bool autoNumberFormat = false)
+        {
+            if (value != null)
+            {
+                //Dumps the object to cell range 
+                if (!autoNumberFormat)
+                {
+                    range.Value = value;
+
+                    range.SetNumberFormat(NumberFormat.Text);
+                    return range;
+                }
+                range.Value = value;
+                range.NumberFormat = value.GetNumberFormat();
+            }
+            return range;
+        }
+
+        public static IRange SetValue(this IRange range, double? value, bool autoNumberFormat = false)
+        {
+            if (value != null)
+            {
+                //Dumps the object to cell range 
+                if (!autoNumberFormat)
+                {
+                    range.Value = value;
+
+                    range.SetNumberFormat(NumberFormat.Text);
+                    return range;
+                }
+                range.Value = value;
                 range.NumberFormat = value.GetNumberFormat();
             }
             return range;
@@ -123,13 +177,19 @@ namespace SpreadsheetGear.Fluent
 
         public static IRange Merge(this IRange range, bool merge)
         {
-            if (merge)
+            if (range.RowCount > 1 || range.ColumnCount > 1)
             {
-                range.Merge();
-            }
-            else
-            {
-                range.UnMerge();
+                if (merge)
+                {
+                    if (range.RowCount > 1 || range.ColumnCount > 1)
+                    {
+                        range.Merge();
+                    }
+                }
+                else
+                {
+                    range.UnMerge();
+                }
             }
             return range;
         }
@@ -168,7 +228,17 @@ namespace SpreadsheetGear.Fluent
             return range;
         }
 
+        public static IRange SetFontColor(this IRange range, System.Drawing.Color color)
+        {
+            range.Font.Color = color.ToSpreadsheetGearColor();
+            return range;
+        }
 
+        public static IRange SetFontColor(this IRange range, SpreadsheetGear.Color color)
+        {
+            range.Font.Color = color;
+            return range;
+        }
         #endregion Cells
 
         #region Styles 
@@ -237,9 +307,7 @@ namespace SpreadsheetGear.Fluent
             public double Bottom { get; set; }
             public double Right { get; set; }
         }
-        
-        
-        //Should rahter use ISeries
+
         public class Series
         {
             public string SeriesName { get; set; }
@@ -273,6 +341,36 @@ namespace SpreadsheetGear.Fluent
             return chart;
         }
 
+        public static IChart SetPercentageLabels(this IChart chart, bool labels)
+        {
+            for (int i = 0; i < chart.SeriesCollection.Count; i++)
+            {
+                chart.SeriesCollection[i].HasDataLabels = true;
+                chart.SeriesCollection[i].DataLabels.ShowPercentage = labels;
+                chart.SeriesCollection[i].DataLabels.ShowValue = false;
+            }
+            return chart;
+        }
+
+        public static IChart SetValueLabels(this IChart chart, bool labels)
+        {
+            for (int i = 0; i < chart.SeriesCollection.Count; i++)
+            {
+                chart.SeriesCollection[i].HasDataLabels = true;
+                chart.SeriesCollection[i].DataLabels.ShowPercentage = false;
+                chart.SeriesCollection[i].DataLabels.ShowValue = labels;
+            }
+            return chart;
+        }
+        public static IChart SetLabelsColors(this IChart chart, SpreadsheetGear.Color color)
+        {
+            for (int i = 0; i < chart.SeriesCollection.Count; i++)
+            {
+                chart.SeriesCollection[i].HasDataLabels = true;
+                chart.SeriesCollection[i].DataLabels.Font.Color = color;
+            }
+            return chart;
+        }
         public static IChart AddSeries(this IChart chart, Series series)
         {
             var currentSeries = chart.SeriesCollection.Add();
@@ -299,6 +397,14 @@ namespace SpreadsheetGear.Fluent
             }
 
             return chart;
+        }
+
+        public static IShape GetBarChart()
+        {
+            var chartWorkbok = Factory.GetWorkbook("~/Content/Report Templates/Chart Templates.xlsx".absolutePath());
+
+            return chartWorkbok.Worksheets[0].Shapes[0];
+
         }
 
 
